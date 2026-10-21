@@ -2,6 +2,7 @@ package com.merged.autodexscreen;
 
 import java.io.OutputStream;
 import rikka.shizuku.Shizuku;
+import rikka.shizuku.ShizukuRemoteProcess;
 
 public class ShizukuShell {
 
@@ -10,7 +11,8 @@ public class ShizukuShell {
 
         new Thread(() -> {
             try {
-                Process process = Shizuku.newProcess(new String[]{"sh"}, null, null);
+                // Sử dụng Shizuku.newProcess chuẩn cho API mới
+                Process process = rikka.shizuku.Shizuku.newProcess(new String[]{"sh"}, null, null);
                 OutputStream os = process.getOutputStream();
                 for (String cmd : commands) {
                     os.write((cmd + "\n").getBytes());
