@@ -35,7 +35,11 @@ jobs:
           echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
       - name: Build Debug APK with Gradle
+        env:
+          ANDROID_HOME: ${{ github.workspace }}/../android-sdk
         run: |
+          export ANDROID_HOME=$HOME/android-sdk
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
           chmod +x gradlew || true
           gradle wrapper --gradle-version 8.4
           ./gradlew assembleDebug
