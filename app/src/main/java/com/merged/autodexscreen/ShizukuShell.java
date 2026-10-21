@@ -1,8 +1,9 @@
 package com.merged.autodexscreen;
 
+import android.os.IBinder;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import rikka.shizuku.Shizuku;
-import rikka.shizuku.ShizukuRemoteProcess;
 
 public class ShizukuShell {
 
@@ -11,8 +12,11 @@ public class ShizukuShell {
 
         new Thread(() -> {
             try {
-                // Sử dụng Shizuku.newProcess chuẩn cho API mới
-                Process process = rikka.shizuku.Shizuku.newProcess(new String[]{"sh"}, null, null);
+                // Dùng reflection để bypass hoàn toàn lỗi private API newProcess của Shizuku v13+
+                Method newProcessMethod = Shizuku.class.getMethod("newProcess", String[].class, String[].class, String.class);
+                newProcessMethod.setAccessible(true);
+                Process process = (Process) newProcessMethod.invoke(null, new String[]{"sh"}, null, null);
+
                 OutputStream os = process.getOutputStream();
                 for (String cmd : commands) {
                     os.write((cmd + "\n").getBytes());
